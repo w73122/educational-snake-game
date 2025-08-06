@@ -38,10 +38,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const rightBtn = document.getElementById('rightBtn');
 
   // Game state variables
-  // Adjusted grid size: fewer cells to make each cell larger, improving
-  // readability of numbers and words on small screens. A 10×10 grid
-  // yields noticeably bigger squares than the previous 20×20 board.
-  const gridSize = 10;
+  // Define separate grid sizes for math and English modes. Math uses
+  // a 10×10 board to provide ample space for numbers, while English uses
+  // a smaller board (e.g. 8×8) so each cell can display longer words
+  // clearly. The gridSize variable will be reassigned in startGame()
+  // based on the selected category.
+  const mathGridSize    = 10;
+  const englishGridSize = 8;
+  let gridSize          = mathGridSize;
   let cellSize;                  // computed pixel size of each cell
   let snake = [];                // array of {x,y} segments, head at index 0
   let direction = {x: 1, y: 0};  // current movement direction
@@ -85,6 +89,14 @@ document.addEventListener('DOMContentLoaded', () => {
    * generates the first question, and starts the game loop.
    */
   function startGame() {
+    // Set grid size according to selected category. Use a smaller board
+    // for English to accommodate longer words.
+    if (categorySel.value === 'english') {
+      gridSize = englishGridSize;
+    } else {
+      gridSize = mathGridSize;
+    }
+    // After updating gridSize, recalculate canvas dimensions
     adjustCanvas();
     // Reset snake to starting position in middle of grid
     snake = [{ x: Math.floor(gridSize / 2), y: Math.floor(gridSize / 2) }];
@@ -254,31 +266,56 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.strokeStyle = '#A5D6A7';
       ctx.strokeRect(segment.x * cellSize, segment.y * cellSize, cellSize, cellSize);
     });
-    // Draw answer items
+    // Draw answer items. For math mode, answers are drawn as coloured
+    // circles containing numbers. For English mode, answers are drawn
+    // as full‑cell rectangles containing words so longer strings are
+    // easily readable. All answer items share the same colour, forcing
+    // players to solve the problem rather than guess based on colour.
+    const isEnglish = categorySel.value === 'english';
     items.forEach(item => {
-      // All answer items share the same colour so that players must solve
-      ctx.fillStyle = answerColor;
-      ctx.beginPath();
-      const cx = item.x * cellSize + cellSize / 2;
-      const cy = item.y * cellSize + cellSize / 2;
-      const radius = cellSize * 0.35;
-      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-      ctx.fill();
-      // Draw answer text centred on the item. Adjust font size so that
-      // longer words still fit within the circle. Estimate each
-      // character consumes ~0.6 of the font size in width. If the word
-      // would overflow the circle, reduce the font size accordingly.
-      ctx.fillStyle = '#FFFFFF';
       const text = item.value.toString();
-      const baseSize = cellSize * 0.4;
-      const maxWidth = radius * 2 * 0.8; // 80% of diameter reserved for text
-      const charWidthRatio = 0.6;
-      const sizeForWord = maxWidth / (text.length * charWidthRatio);
-      const fontSize = Math.min(baseSize, sizeForWord);
-      ctx.font = `${fontSize.toFixed(2)}px Arial`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(text, cx, cy);
+      if (!isEnglish) {
+        // Math mode: draw circle
+        ctx.fillStyle = answerColor;
+        ctx.beginPath();
+        const cx = item.x * cellSize + cellSize / 2;
+        const cy = item.y * cellSize + cellSize / 2;
+        const radius = cellSize * 0.35;
+        ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+        ctx.fill();
+        // Draw number in centre of circle with dynamic font size
+        ctx.fillStyle = '#FFFFFF';
+        const baseSize = cellSize * 0.4;
+        const maxWidth = radius * 2 * 0.8;
+        const charWidthRatio = 0.6;
+        const sizeForWord = maxWidth / (text.length * charWidthRatio);
+        const fontSize = Math.min(baseSize, sizeForWord);
+        ctx.font = `${fontSize.toFixed(2)}px Arial`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(text, cx, cy);
+      } else {
+        // English mode: draw full square
+        const xPos = item.x * cellSize;
+        const yPos = item.y * cellSize;
+        ctx.fillStyle = answerColor;
+        ctx.fillRect(xPos, yPos, cellSize, cellSize);
+        // Add subtle border
+        ctx.strokeStyle = '#A5D6A7';
+        ctx.strokeRect(xPos, yPos, cellSize, cellSize);
+        // Draw word centred within the cell. Calculate a font size that
+        // allows the entire word to fit within ~80% of the cell width.
+        ctx.fillStyle = '#FFFFFF';
+        const maxWidth = cellSize * 0.9;
+        const charWidthRatio = 0.6;
+        const sizeForWord = maxWidth / (text.length * charWidthRatio);
+        const baseSize = cellSize * 0.35;
+        const fontSize = Math.min(baseSize, sizeForWord);
+        ctx.font = `${fontSize.toFixed(2)}px Arial`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(text, xPos + cellSize / 2, yPos + cellSize / 2);
+      }
     });
   }
 
