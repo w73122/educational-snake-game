@@ -32,7 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const rightBtn = document.getElementById('rightBtn');
 
   // Game state variables
-  const gridSize = 20;           // number of cells along each axis
+  // Adjusted grid size: fewer cells to make each cell larger, improving
+  // readability of numbers and words on small screens. A 10×10 grid
+  // yields noticeably bigger squares than the previous 20×20 board.
+  const gridSize = 10;
   let cellSize;                  // computed pixel size of each cell
   let snake = [];                // array of {x,y} segments, head at index 0
   let direction = {x: 1, y: 0};  // current movement direction
@@ -441,6 +444,15 @@ document.addEventListener('DOMContentLoaded', () => {
       wordList = hardWords;
     }
     const word = wordList[Math.floor(Math.random() * wordList.length)];
+    // A dictionary mapping each word to its Chinese translation. This allows
+    // us to show the meaning instead of the word itself, encouraging
+    // players to recall the correct spelling from the translation.
+    const translationDict = {
+      cat: '貓', dog: '狗', sun: '太陽', book: '書', tree: '樹', car: '車', milk: '牛奶', ball: '球', fish: '魚', baby: '嬰兒',
+      chair: '椅子', plant: '植物', happy: '快樂', green: '綠色', school: '學校', water: '水', music: '音樂', phone: '電話', mouse: '老鼠', apple: '蘋果',
+      pencil: '鉛筆', yellow: '黃色', friend: '朋友', animal: '動物', flower: '花', garden: '花園', family: '家庭', spring: '春天', winter: '冬天', cookie: '餅乾'
+    };
+    const translation = translationDict[word] || '';
     const wrongSet = new Set();
     /**
      * Create a mutated version of the provided word by either removing,
@@ -502,8 +514,8 @@ document.addEventListener('DOMContentLoaded', () => {
       { value: wrongs[1], correct: false }
     ];
     answers = answers.sort(() => Math.random() - 0.5);
-    // Show the word to be spelled so the player can identify the correct spelling
-    return { question: `請選出正確的拼寫： ${word}`, answers };
+    // Present the Chinese meaning and ask for the corresponding English word
+    return { question: `請選出與「${translation}」對應的英文單字`, answers };
   }
 
   /**

@@ -181,6 +181,8 @@ button:hover {
   display: flex;
   flex-direction: row;
   justify-content: center;
+  /* Increase horizontal space between left and right arrows to reduce mis‑taps on mobile */
+  gap: 1.5rem;
 }
 
 /* Responsive adjustments */
