@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Educational Snake Game</title>
+  <!-- Link to our stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Menu screen -->
+  <div id="menu" class="screen">
+    <!-- Wrap the menu contents in a container to provide a contrast against the busy background -->
+    <div class="menu-content">
+      <h1>Educational Snake Game</h1>
+      <p>挑選遊戲主題和難度來開始挑戰吧！</p>
+      <div class="settings">
+        <label for="categorySelect">題目類型：</label>
+        <select id="categorySelect">
+          <option value="math">數學</option>
+          <option value="english">英語</option>
+        </select>
+        <label for="difficultySelect">難度：</label>
+        <select id="difficultySelect">
+          <option value="easy">簡單</option>
+          <option value="medium">中等</option>
+          <option value="hard">困難</option>
+        </select>
+      </div>
+      <button id="startBtn">開始遊戲</button>
+    </div>
+  </div>
+
+  <!-- Game screen -->
+  <div id="gameContainer" class="screen" style="display:none;">
+    <div id="header">
+      <span id="question">題目</span>
+      <span id="score">分數: 0</span>
+      <button id="backToMenuBtn">返回</button>
+    </div>
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <!-- On-screen controls for mobile -->
+    <div id="controls">
+      <button id="upBtn">↑</button>
+      <div class="middleRow">
+        <button id="leftBtn">←</button>
+        <button id="rightBtn">→</button>
+      </div>
+      <button id="downBtn">↓</button>
+    </div>
+  </div>
+
+  <!-- Script -->
+  <script src="script.js"></script>
+</body>
+</html>

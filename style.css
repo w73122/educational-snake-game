@@ -1,0 +1,205 @@
+/*
+ * Stylesheet for the Educational Snake Game.
+ * The design uses a cohesive green colour palette to be gentle on the eyes and
+ * create a playful, nature‑inspired atmosphere. Layouts are responsive to
+ * adjust gracefully on mobile devices.
+ */
+
+/* Colour variables for easy theme tweaking */
+:root {
+  --primary: #4CAF50;
+  --secondary: #66BB6A;
+  --dark: #2E7D32;
+  --light: #E8F5E9;
+  --accent: #FF7043;
+  --wrong: #039BE5;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Arial', sans-serif;
+  background-color: var(--light);
+  color: #333;
+}
+
+/* Shared screen container styles */
+.screen {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Menu styling */
+#menu {
+  /* Use a themed forest background with a cute snake on the menu */
+  background-image: url('assets/menu_snake_bg.png');
+  background-size: cover;
+  background-position: center;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+#menu h1 {
+  font-size: 3rem;
+  margin: 0.5rem 0;
+  color: var(--dark);
+  text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+}
+
+/* Content wrapper inside the menu to improve readability on busy backgrounds */
+#menu .menu-content {
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  backdrop-filter: blur(2px);
+}
+
+#menu p {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  color: #1B5E20;
+}
+
+.settings {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.settings label {
+  font-weight: bold;
+  margin-right: 0.25rem;
+}
+
+.settings select {
+  padding: 0.4rem 0.6rem;
+  font-size: 1rem;
+  border: 1px solid var(--dark);
+  border-radius: 4px;
+  background-color: white;
+  color: #333;
+}
+
+button {
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  background-color: var(--primary);
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: var(--secondary);
+}
+
+/* Game container styling */
+#gameContainer {
+  /* Game container uses a subtle forest scene with a cute snake */
+  background-image: url('assets/game_snake_bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* Set a fallback colour in case image fails to load */
+  background-color: var(--light);
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+#header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+#header span {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--dark);
+}
+
+#header button {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
+  background-color: var(--secondary);
+  color: #fff;
+}
+
+#gameCanvas {
+  border: 3px solid var(--dark);
+  background-color: #F1F8E9;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  margin-bottom: 1rem;
+  width: 600px;
+  height: 600px;
+  max-width: 90vw;
+  max-height: 90vw;
+}
+
+/* On-screen controls */
+#controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+#controls button {
+  margin: 0.3rem;
+  width: 60px;
+  height: 60px;
+  font-size: 1.5rem;
+  line-height: 1;
+  background-color: var(--primary);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#controls .middleRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  #menu h1 {
+    font-size: 2.2rem;
+  }
+  #menu p {
+    font-size: 1rem;
+  }
+  .settings label, .settings select {
+    font-size: 0.9rem;
+  }
+  button {
+    font-size: 0.9rem;
+  }
+  #controls button {
+    width: 50px;
+    height: 50px;
+    font-size: 1.3rem;
+  }
+}
