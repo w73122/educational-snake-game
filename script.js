@@ -25,6 +25,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const canvas        = document.getElementById('gameCanvas');
   const ctx           = canvas.getContext('2d');
 
+  // Additional controls for speed and volume
+  const speedSel       = document.getElementById('speedSelect');
+  const volumeSlider   = document.getElementById('volumeSlider');
+  const volumeSliderInGame = document.getElementById('volumeSliderInGame');
+  const bgMusic        = document.getElementById('bgMusic');
+
   // Control buttons
   const upBtn    = document.getElementById('upBtn');
   const downBtn  = document.getElementById('downBtn');
@@ -89,7 +95,30 @@ document.addEventListener('DOMContentLoaded', () => {
     nextQuestion();
     // Clear any existing interval before starting a new one
     if (gameInterval) clearInterval(gameInterval);
-    gameInterval = setInterval(gameLoop, 150);
+    // Determine update interval based on selected speed
+    let interval;
+    switch (speedSel.value) {
+      case 'slow':
+        interval = 300;
+        break;
+      case 'fast':
+        interval = 80;
+        break;
+      default: // normal
+        interval = 150;
+    }
+    gameInterval = setInterval(gameLoop, interval);
+    // Sync volume between menu and in‑game slider and start background music
+    if (volumeSlider && volumeSliderInGame) {
+      // copy current menu slider value to in‑game slider when starting
+      volumeSliderInGame.value = volumeSlider.value;
+      const vol = parseInt(volumeSlider.value, 10) / 100;
+      bgMusic.volume = vol;
+    }
+    // Play the background music (if paused) and loop
+    if (bgMusic.paused) {
+      bgMusic.play().catch(() => {});
+    }
   }
 
   /**
@@ -315,6 +344,23 @@ document.addEventListener('DOMContentLoaded', () => {
   leftBtn.addEventListener('touchstart',  (e) => { e.preventDefault(); setDirection({ x: -1, y: 0 }); });
   rightBtn.addEventListener('touchstart', (e) => { e.preventDefault(); setDirection({ x: 1, y: 0 });  });
 
+  // Synchronize volume controls and update audio volume
+  if (volumeSlider && volumeSliderInGame && bgMusic) {
+    const syncVolume = (val) => {
+      // Clamp between 0 and 100
+      const v = Math.max(0, Math.min(100, parseInt(val, 10) || 0));
+      volumeSlider.value = v;
+      volumeSliderInGame.value = v;
+      bgMusic.volume = v / 100;
+    };
+    volumeSlider.addEventListener('input', (e) => {
+      syncVolume(e.target.value);
+    });
+    volumeSliderInGame.addEventListener('input', (e) => {
+      syncVolume(e.target.value);
+    });
+  }
+
   // Start button: hide menu and start game
   startBtn.addEventListener('click', () => {
     menuDiv.style.display = 'none';
@@ -327,6 +373,12 @@ document.addEventListener('DOMContentLoaded', () => {
     clearInterval(gameInterval);
     gameContainer.style.display = 'none';
     menuDiv.style.display = 'flex';
+    // Pause background music when returning to menu
+    if (!bgMusic.paused) {
+      bgMusic.pause();
+      // Reset playback to beginning so it starts fresh next time
+      bgMusic.currentTime = 0;
+    }
   });
 
   /**

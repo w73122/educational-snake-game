@@ -177,6 +177,27 @@ button:hover {
   justify-content: center;
 }
 
+/* Volume control styling for both menu and game screens */
+.volume-control {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--dark);
+}
+.volume-control label {
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+.volume-control input[type="range"] {
+  width: 200px;
+}
+.volume-control.in-game {
+  margin-top: 0.5rem;
+  align-items: center;
+}
+
 #controls .middleRow {
   display: flex;
   flex-direction: row;
